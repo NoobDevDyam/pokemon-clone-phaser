@@ -18,4 +18,7 @@ export default class Charmander extends Pokemon {
     this.spriteFront = 'charmander-front'
     this.spriteBack = 'charmander-back'
   }
+  public dealDamage() {
+    return Math.floor(Math.random() * 2);
+  }
 }
