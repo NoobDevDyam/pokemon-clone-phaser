@@ -1,9 +1,10 @@
 import Phaser from 'phaser';
 import config from './config';
-import GameScene from './scenes/Game';
+import Overworld from './scenes/Overworld';
+import Battle from './scenes/Battle';
 
 new Phaser.Game(
   Object.assign(config, {
-    scene: [GameScene]
+    scene: [Overworld, Battle]
   })
 );
