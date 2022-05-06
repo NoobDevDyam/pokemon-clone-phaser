@@ -121,24 +121,10 @@ export default class Battle extends Phaser.Scene {
   }
 
   attack() {
-    let lowestHp = this.enemiesData[0]
-    for (let i = 0; i < this.enemiesData.length ; i++) {
-      if (lowestHp.HP > this.enemiesData[i].HP) {
-        lowestHp = this.enemiesData[i]
-      }
-      if (lowestHp.HP > 0) {
-        lowestHp.HP -= this.playerData.dealDamage()
-      } else if (lowestHp.HP <= 0) {
-        lowestHp.HP = 0
-      }
-    }
+    const lowestHp = this.getLowestHP()
+    const lowestHpBar  = this.getHpBar(lowestHp)
 
-
-    console.log(lowestHp)
-
-    
-    
-    if (lowestHp.HP === 0) {
+    if (lowestHp.HP <= 0 ) {
       for (const enemy of this.enemiesData) {
         if (lowestHp.id === enemy.id) {
           this.enemiesData.splice(this.enemiesData.indexOf(enemy), 1)
@@ -146,16 +132,31 @@ export default class Battle extends Phaser.Scene {
         
       }
       for (let i = 0; i < this.enemies.length; i++) {
-        if (lowestHp.id = this.enemies[i].id) {
+        if (lowestHp.id === this.enemies[i].id) {
           this.enemies[i].sprite.destroy()
         }
       }
     }
 
+    if (lowestHp.HP > 0) {
+      lowestHp.HP -= this.playerData.dealDamage()
+    } else if (lowestHp.HP < 0) {
+      lowestHp.HP = 0
+    }
+
     this.playerTakeDamage()
+    this.updateHpBars(lowestHp)
     
     console.log(lowestHp.HP)
     console.log(this.enemiesData)
+  }
+
+  getHpBar(pokemon: Pokemon) {
+    for (const hpBar of this.enemyBar) {
+      if (hpBar.id === pokemon.id) {
+        return hpBar
+      }
+    }
   }
 
   playerTakeDamage() {
@@ -166,10 +167,20 @@ export default class Battle extends Phaser.Scene {
     }
   }
 
+  getLowestHP() {
+    let lowestHp = this.enemiesData[0]
+    for (let i = 0; i < this.enemiesData.length ; i++) {
+      if (lowestHp.HP > this.enemiesData[i].HP) {
+        lowestHp = this.enemiesData[i]
+      }
+    }
+    return lowestHp
+  }
+
 
   
   update(){
-    this.updateHpBars()
+    
 
     if (this.enemiesData.length === 0) {
       this.Flee()
@@ -184,9 +195,9 @@ export default class Battle extends Phaser.Scene {
 
 
   // TODO: Fix Bug where hpBars are not updating correctly
-  updateHpBars() {
+  updateHpBars(pokemon : Pokemon) {
     this.playerHpBar.width = (this.playerData.HP / 100) * 150
-    const hps = []
+    /* const hps = []
     for (const enemy of this.enemiesData) {
       hps.push({
         HP: enemy.HP,
@@ -194,11 +205,20 @@ export default class Battle extends Phaser.Scene {
       })
     }
     for (let i = 0; i < this.enemyBar.length; i++) {
-      if (this.enemyBar[i].id === hps[i].id) {
-        let width = (hps[i]["HP"] / 100) * 150
-        this.enemyBar[i].hpbar.width = width
+      if(this.enemyBar[i].id) {
+        if (this.enemyBar[i].id === hps[i].id ) {
+          let width = (hps[i].HP / 100) * 150
+          this.enemyBar[i].hpbar.width = width
+        }
+      }
+    } */
+
+    for (const hpBar of this.enemyBar) {
+      if (hpBar.id === pokemon.id) {
+        hpBar.hpbar.width = (pokemon.HP / 100) * 150
       }
     }
+
   }
 
   
