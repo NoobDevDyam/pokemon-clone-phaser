@@ -1,3 +1,5 @@
+/* Sir sorry we didnt plan out things carefully huhu */
+
 import Phaser from 'phaser';
 import Bulbasaur from '../pokemon/Bulbasaur';
 import Charmander from '../pokemon/Charmander';
