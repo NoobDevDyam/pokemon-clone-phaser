@@ -197,21 +197,6 @@ export default class Battle extends Phaser.Scene {
   // TODO: Fix Bug where hpBars are not updating correctly
   updateHpBars(pokemon : Pokemon) {
     this.playerHpBar.width = (this.playerData.HP / 100) * 150
-    /* const hps = []
-    for (const enemy of this.enemiesData) {
-      hps.push({
-        HP: enemy.HP,
-        id: enemy.id
-      })
-    }
-    for (let i = 0; i < this.enemyBar.length; i++) {
-      if(this.enemyBar[i].id) {
-        if (this.enemyBar[i].id === hps[i].id ) {
-          let width = (hps[i].HP / 100) * 150
-          this.enemyBar[i].hpbar.width = width
-        }
-      }
-    } */
 
     for (const hpBar of this.enemyBar) {
       if (hpBar.id === pokemon.id) {
