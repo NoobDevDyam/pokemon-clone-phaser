@@ -16,7 +16,7 @@ export default class Battle extends Phaser.Scene {
   public enemyBar: HPBar[];
   public playerHpBar: Phaser.GameObjects.Rectangle | any;
   public playerData: Player;
-
+  
   constructor() {
     super('Battle');
     this.enemiesData = []
@@ -37,7 +37,7 @@ export default class Battle extends Phaser.Scene {
   }
 
   create() {
-    this.music = this.sound.add('bg-music', { loop: true })
+    this.music = this.sound.add('bg-music', {loop: true} )
 
     // set volume so it's not way too dank
     this.sound.volume = 0.3
@@ -50,7 +50,7 @@ export default class Battle extends Phaser.Scene {
     this.enemies = this.createEnemyGroup(this.enemiesData)
 
     //add player
-    this.player = this.add.image(400, 500, this.playerData.spriteBack).setScale(5)
+    this.player = this.add.image(400,500, this.playerData.spriteBack).setScale(5) 
 
     //enemy stats
     this.addNameTexts()
@@ -65,7 +65,6 @@ export default class Battle extends Phaser.Scene {
     //add attack btn
     this.addAttackBtn()
     this.addFleeBtn()
-    this.addHealBtn()
   }
 
   addPlayerHpBar() {
@@ -81,7 +80,7 @@ export default class Battle extends Phaser.Scene {
     let x = 0;
     let y = 50;
     for (const enemy of this.enemiesData) {
-      x += 120
+      x+= 120
       this.add.text(x, y, enemy.name).setOrigin(0.5)
     }
   }
@@ -91,7 +90,7 @@ export default class Battle extends Phaser.Scene {
     let x = 0;
     let y = 150;
     for (const enemy of this.enemiesData) {
-      x += 120
+      x+= 120
       this.add.text(x, y, `Level: ${enemy.level}`).setOrigin(0.5)
     }
   }
@@ -103,7 +102,7 @@ export default class Battle extends Phaser.Scene {
     const hpBars = []
     for (const enemy of this.enemiesData) {
       let width = (enemy.HP / 100) * 150
-      x += 120
+      x+= 120
       const hpBar = this.add.rectangle(x, y, width, 10, 0xff0000).setOrigin(0.5)
       hpBars.push(new HPBar(hpBar, enemy.id))
     }
@@ -113,30 +112,24 @@ export default class Battle extends Phaser.Scene {
   addAttackBtn() {
     const attackBtn = this.add.text(200, 500, 'Attack!', { color: '#0f0' })
       .setInteractive()
-      .on('pointerdown', () => this.attack());
+      .on('pointerdown', () => this.attack() );
   }
   addFleeBtn() {
-    this.add.text(200, 550, 'Flee!', { color: '#0f0' })
+    const attackBtn = this.add.text(200, 550, 'Flee!', { color: '#0f0' })
       .setInteractive()
-      .on('pointerdown', () => this.Flee());
-  }
-  addHealBtn() {
-    this.add.text(150, 500, 'Heal!', { color: '#0f0' })
-      .setInteractive()
-      .on('pointerdown', () => this.Heal());
+      .on('pointerdown', () => this.Flee() );
   }
 
   attack() {
     const lowestHp = this.getLowestHP()
-    const lowestHpBar = this.getHpBar(lowestHp)
+    const lowestHpBar  = this.getHpBar(lowestHp)
 
-    if (lowestHp.HP <= 0) {
-      this.playerData.levelUp()
+    if (lowestHp.HP <= 0 ) {
       for (const enemy of this.enemiesData) {
         if (lowestHp.id === enemy.id) {
           this.enemiesData.splice(this.enemiesData.indexOf(enemy), 1)
         }
-
+        
       }
       for (let i = 0; i < this.enemies.length; i++) {
         if (lowestHp.id === this.enemies[i].id) {
@@ -153,8 +146,7 @@ export default class Battle extends Phaser.Scene {
 
     this.playerTakeDamage()
     this.updateHpBars(lowestHp)
-    this.updatePlayerHpBar() 
-
+    
     console.log(lowestHp.HP)
     console.log(this.enemiesData)
   }
@@ -177,7 +169,7 @@ export default class Battle extends Phaser.Scene {
 
   getLowestHP() {
     let lowestHp = this.enemiesData[0]
-    for (let i = 0; i < this.enemiesData.length; i++) {
+    for (let i = 0; i < this.enemiesData.length ; i++) {
       if (lowestHp.HP > this.enemiesData[i].HP) {
         lowestHp = this.enemiesData[i]
       }
@@ -185,8 +177,10 @@ export default class Battle extends Phaser.Scene {
     return lowestHp
   }
 
-  update() {
 
+  
+  update(){
+    
 
     if (this.enemiesData.length === 0) {
       this.Flee()
@@ -199,14 +193,11 @@ export default class Battle extends Phaser.Scene {
     this.scene.resume('Overworld')
   }
 
-  Heal() {
-    this.playerData.HP = 44;
-    this.playerTakeDamage;
-    this.updatePlayerHpBar();
-  }
 
   // TODO: Fix Bug where hpBars are not updating correctly
-  updateHpBars(pokemon: Pokemon) {
+  updateHpBars(pokemon : Pokemon) {
+    this.playerHpBar.width = (this.playerData.HP / 100) * 150
+
     for (const hpBar of this.enemyBar) {
       if (hpBar.id === pokemon.id) {
         hpBar.hpbar.width = (pokemon.HP / 100) * 150
@@ -215,12 +206,9 @@ export default class Battle extends Phaser.Scene {
 
   }
 
-  updatePlayerHpBar() {
-    this.playerHpBar.width = (this.playerData.HP / 100) * 150;
-  }
-
+  
   createEnemies() {
-    const Enemies: Pokemon[] = []
+    const Enemies : Pokemon[] = []
     for (let i = 0; i < 3; i++) {
       const rand = Math.floor(Math.random() * 3)
       switch (rand) {
@@ -235,14 +223,14 @@ export default class Battle extends Phaser.Scene {
           break
       }
     }
-
+    
     return Enemies
   }
 
-  createEnemyGroup(enemies: Pokemon[]) {
+  createEnemyGroup(enemies : Pokemon[]) {
     let x = 50;
     let y = 100;
-    const enemyGroup: BattleUnit[] = []
+    const enemyGroup : BattleUnit[] = []
     for (const enemy of enemies) {
       x += 100
       const pokemonEnemy = this.add.sprite(x, y, enemy.spriteFront).setScale(2)
