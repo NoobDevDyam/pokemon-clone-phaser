@@ -65,6 +65,7 @@ export default class Battle extends Phaser.Scene {
     //add attack btn
     this.addAttackBtn()
     this.addFleeBtn()
+    this.addHealBtn()
   }
 
   addPlayerHpBar() {
@@ -119,17 +120,22 @@ export default class Battle extends Phaser.Scene {
       .setInteractive()
       .on('pointerdown', () => this.Flee() );
   }
+  addHealBtn() {
+    const healBtn = this.add.text(100, 500, 'Heal!', { color: '#0f0' })
+      .setInteractive()
+      .on('pointerdown', () => this.Heal() );
+  }
 
   attack() {
     const lowestHp = this.getLowestHP()
     const lowestHpBar  = this.getHpBar(lowestHp)
 
     if (lowestHp.HP <= 0 ) {
+      this.playerData.levelUp()
       for (const enemy of this.enemiesData) {
         if (lowestHp.id === enemy.id) {
           this.enemiesData.splice(this.enemiesData.indexOf(enemy), 1)
         }
-        
       }
       for (let i = 0; i < this.enemies.length; i++) {
         if (lowestHp.id === this.enemies[i].id) {
@@ -146,6 +152,7 @@ export default class Battle extends Phaser.Scene {
 
     this.playerTakeDamage()
     this.updateHpBars(lowestHp)
+    this.updatePlayerHpBar()
     
     console.log(lowestHp.HP)
     console.log(this.enemiesData)
@@ -177,11 +184,7 @@ export default class Battle extends Phaser.Scene {
     return lowestHp
   }
 
-
-  
   update(){
-    
-
     if (this.enemiesData.length === 0) {
       this.Flee()
     }
@@ -193,20 +196,26 @@ export default class Battle extends Phaser.Scene {
     this.scene.resume('Overworld')
   }
 
+  Heal() {
+    this.playerData.HP = 44;
+    this.playerTakeDamage()
+    this.updatePlayerHpBar()
+  }
+
 
   // TODO: Fix Bug where hpBars are not updating correctly
   updateHpBars(pokemon : Pokemon) {
-    this.playerHpBar.width = (this.playerData.HP / 100) * 150
-
     for (const hpBar of this.enemyBar) {
       if (hpBar.id === pokemon.id) {
         hpBar.hpbar.width = (pokemon.HP / 100) * 150
       }
     }
-
   }
 
-  
+  updatePlayerHpBar() {
+    this.playerHpBar.width = (this.playerData.HP / 100) * 150
+  }
+
   createEnemies() {
     const Enemies : Pokemon[] = []
     for (let i = 0; i < 3; i++) {
